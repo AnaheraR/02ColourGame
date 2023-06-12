@@ -57,6 +57,32 @@ class Play:
                                     )
         self.choose_heading.grid(row=0)
 
+        instructions = "Choose one of the colours below. When you choose " \
+                       "a colour, the computer's choice and the results at the end of " \
+                       "the round will be revealed."
+        self.instructions_label = Label(self.quest_frame, text=instructions,
+                                        wraplength=350, justify="left")
+        self.instructions_label.grid(row=1)
+
+        # get colours for buttons for first round...
+        button_colours_list = self.get_round_colors()
+        print(button_colours_list)
+
+        # create colour buttons (in choice_frame!)
+        self.choice_frame = Frame(self.quest_frame)
+        self.choice_frame.grid(row=2)
+
+        for item in range(0, 6):
+            self.choice_button = Button(self.choice_frame,
+                                        fg=button_colours_list[item][2],
+                                        bg=button_colours_list[item][0],
+                                        text="{}".format(button_colours_list[item][0]),
+                                        width=15,
+                                        command=lambda i=item: self.to_compare(button_colours_list[i][1]))
+            self.choice_button.grid(row=item // 3,
+                                    column=item % 3,
+                                    padx=5, pady=5)
+
         self.control_frame = Frame(self.quest_frame)
         self.control_frame.grid(row=6)
 
@@ -64,6 +90,34 @@ class Play:
                                         text="Start Over",
                                         command=self.close_play)
         self.start_over_button.grid(row=0, column=2)
+
+    def get_all_colours(self):
+        file = open("00_colour_list_hex_v3.csv", "r")
+        all_colors = list(csv.reader(file, delimiter=","))
+        file.close()
+
+        # remove the first row (header values)
+        all_colors.pop(0)
+        return var_all_colors
+
+    def get_round_colours(self):
+        round_colour_list = []
+        color_scores = []
+
+        # get six unique colours
+        while len(round_colour_list) < 6:
+        # Choose item
+        chosen_colour = random.choice(some_colors)
+        index_chosen = some_colors.index(chosen_colour)
+
+        # check score is not already in list
+        if chosen_colour[1] not in color_scores:
+            # add item to rounds list
+            round_colour_list.append(chosen_colour)
+            color_scores.append(chosen_colour[1])
+
+            # remove item from master list
+            self.all_colours.pop(index_chosen)
 
     def close_play(self):
         root.deiconify()

@@ -29,7 +29,7 @@ for item in range(0, 3):
 
     # get six unique colours
     while len(round_colour_list) < 6:
-        # choose item
+        # Choose item
     chosen_colour = random.choice(some_colors)
     index_chosen = some_colors.index(chosen_colour)
 
