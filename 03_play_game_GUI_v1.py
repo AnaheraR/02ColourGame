@@ -93,7 +93,7 @@ class Play:
         self.rounds_frame = Frame(self.quest_frame)
         self.rounds_frame.grid(row=4, pady=5)
 
-        self.round_results_label = Label(self.rounds_frame, text="Round {}/{}",
+        self.round_results_label = Label(self.rounds_frame, text="Round {} of {}",
                                          width=32, bg="#FFF2CC",
                                          font=("Arial", 10),
                                          pady=5)
@@ -176,9 +176,9 @@ class Play:
     def get_help(self):
         print("You choose to get help")
 
+    # DON'T USE THIS FUNCTION IN BASE AS IT KILLS THE ROOT
     def close_play(self):
-        root.deiconify()
-        self.play_box.destroy()
+        root.destroy()
 
 
 # main routine
