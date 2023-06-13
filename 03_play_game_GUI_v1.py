@@ -83,6 +83,28 @@ class Play:
                                     column=item % 3,
                                     padx=5, pady=5)
 
+        # display computer choice (after user has chosen a colour)
+        self.comp_choice_label = Label(self.quest_frame,
+                                       text="Computer choice will appear here",
+                                       bg="#C0C0C0", width=51)
+        self.comp_choice_label.grid(row=3, pady=10)
+
+        # frame to include round results and next button
+        self.rounds_frame = Frame(self.quest_frame)
+        self.rounds_frame.grid(row=4, pady=5)
+
+        self.round_results_label = Label(self.rounds_frame, text="Round {}/{}",
+                                         width=32, bg="#FFF2CC",
+                                         font=("Arial", 10),
+                                         pady=5)
+        self.round_results_label.grid(row=0, column=0, padx=5)
+
+        self.next_button = Button(self.rounds_frame, text="Next Round",
+                                  fg="#FFFFFF", bg="#008BFC",
+                                  font=("Arial", 11, "bold"),
+                                  width=10, state=DISABLED)
+        self.next_button.grid(row=0, column=1)
+
         self.control_frame = Frame(self.quest_frame)
         self.control_frame.grid(row=6)
 
@@ -90,6 +112,21 @@ class Play:
                                         text="Start Over",
                                         command=self.close_play)
         self.start_over_button.grid(row=0, column=2)
+
+        control_buttons = [
+            ["#CC6600", "Help", "get help"],
+            ["#004C99", "Statistics", "get stats"],
+            ["#808080", "Start Over", "start over"]
+        ]
+
+        for item in range(0, 3):
+            self.make_control_button = Button(self.control_frame,
+                                              fg="#FFFFFF",
+                                              bg=control_buttons[item][0],
+                                              text=control_buttons[item][1],
+                                              width=11, font=("Arial", "12", "bold"),
+                                              command=lambda i=item: self.to_do(control_buttons[i][2]))
+            self.make_control_button.grid(row=0, column=item, padx=5, pady=5)
 
     def get_all_colours(self):
         file = open("00_colour_list_hex_v3.csv", "r")
@@ -106,9 +143,9 @@ class Play:
 
         # get six unique colours
         while len(round_colour_list) < 6:
-        # Choose item
-        chosen_colour = random.choice(some_colors)
-        index_chosen = some_colors.index(chosen_colour)
+            # Choose item
+            chosen_colour = random.choice(some_colors)
+            index_chosen = some_colors.index(chosen_colour)
 
         # check score is not already in list
         if chosen_colour[1] not in color_scores:
@@ -118,6 +155,26 @@ class Play:
 
             # remove item from master list
             self.all_colours.pop(index_chosen)
+
+    def to_compare(self, user_score):
+        print("Your score is", user_score)
+
+    # detects which control button was pressed and
+    # invokes necessary function. Can possibly replace functions
+    # with calls to classes in this section
+    def to_do(self, action):
+        if action == "get help":
+            self.get_help()
+        elif action == "get stats":
+            self.get_stats()
+        else:
+            self.close_play()
+
+    def get_stats(self):
+        print("You choose to get the statistics")
+
+    def get_help(self):
+        print("You choose to get help")
 
     def close_play(self):
         root.deiconify()
