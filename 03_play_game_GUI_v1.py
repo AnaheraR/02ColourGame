@@ -65,7 +65,7 @@ class Play:
         self.instructions_label.grid(row=1)
 
         # get colours for buttons for first round...
-        button_colours_list = self.get_round_colors()
+        button_colours_list = self.get_round_colours()
         print(button_colours_list)
 
         # create colour buttons (in choice_frame!)
@@ -93,7 +93,7 @@ class Play:
         self.rounds_frame = Frame(self.quest_frame)
         self.rounds_frame.grid(row=4, pady=5)
 
-        self.round_results_label = Label(self.rounds_frame, text="Round {} of {}",
+        self.round_results_label = Label(self.rounds_frame, text="Round 1: User:- \t Computer:-",
                                          width=32, bg="#FFF2CC",
                                          font=("Arial", 10),
                                          pady=5)
@@ -104,6 +104,13 @@ class Play:
                                   font=("Arial", 11, "bold"),
                                   width=10, state=DISABLED)
         self.next_button.grid(row=0, column=1)
+
+        # large label to show overall game results
+        self.game_results_label = Label(self.quest_frame,
+                                        text="Game Totals: User: - \tComputer: -",
+                                        bg="#FFF2CC", padx=10, pady=10,
+                                        font=("Arial", "10"), width=42)
+        self.game_results_label.grid(row=5, pady=5)
 
         self.control_frame = Frame(self.quest_frame)
         self.control_frame.grid(row=6)
@@ -130,11 +137,11 @@ class Play:
 
     def get_all_colours(self):
         file = open("00_colour_list_hex_v3.csv", "r")
-        all_colors = list(csv.reader(file, delimiter=","))
+        var_all_colors = list(csv.reader(file, delimiter=","))
         file.close()
 
         # remove the first row (header values)
-        all_colors.pop(0)
+        var_all_colors.pop(0)
         return var_all_colors
 
     def get_round_colours(self):
@@ -144,17 +151,19 @@ class Play:
         # get six unique colours
         while len(round_colour_list) < 6:
             # Choose item
-            chosen_colour = random.choice(some_colors)
-            index_chosen = some_colors.index(chosen_colour)
+            chosen_colour = random.choice(self.all_colours)
+            index_chosen = self.all_colours.index(chosen_colour)
 
-        # check score is not already in list
-        if chosen_colour[1] not in color_scores:
-            # add item to rounds list
-            round_colour_list.append(chosen_colour)
-            color_scores.append(chosen_colour[1])
+            # check score is not already in list
+            if chosen_colour[1] not in color_scores:
+                # add item to rounds list
+                round_colour_list.append(chosen_colour)
+                color_scores.append(chosen_colour[1])
 
-            # remove item from master list
-            self.all_colours.pop(index_chosen)
+                # remove item from master list
+                self.all_colours.pop(index_chosen)
+
+        return round_colour_list
 
     def to_compare(self, user_score):
         print("Your score is", user_score)
