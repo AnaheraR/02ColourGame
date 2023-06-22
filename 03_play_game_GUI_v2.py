@@ -133,6 +133,11 @@ class Play:
             ["#808080", "Start Over", "start over"]
         ]
 
+        # list to hold the references for control buttons
+        # so that the text of the 'start over' button can
+        # easily be configured when the game is over
+        self.control_button_ref = []
+
         for item in range(0, 3):
             self.make_control_button = Button(self.control_frame,
                                               fg="#FFFFFF",
@@ -142,6 +147,10 @@ class Play:
                                               command=lambda i=item: self.to_do(control_buttons[i][2]))
             self.make_control_button.grid(row=0, column=item, padx=5, pady=5)
 
+            # add buttons to control list
+            self.control_button_ref.append(self.make_control_button)
+
+    # retrieve colours csv file
     def get_all_colours(self):
         file = open("00_colour_list_hex_v3.csv", "r")
         var_all_colors = list(csv.reader(file, delimiter=","))
@@ -151,6 +160,7 @@ class Play:
         var_all_colors.pop(0)
         return var_all_colors
 
+    # randomly choose six colours for buttons
     def get_round_colours(self):
         round_colour_list = []
         color_scores = []
@@ -172,8 +182,79 @@ class Play:
 
         return round_colour_list
 
+    # sets up new round when 'next' button is pressed
+    def new_round(self):
+
+        # disable next button (re-enable it at the end
+        # of the round)
+        self.next_button.config(state=DISABLED)
+
+        # empty button list so we can get new colours
+        self.button_colours_list.clear()
+
+        # get new colours for buttons
+        self.button_colours_list = self.get_round_colours()
+
+        # set button bg, fg and text
+        count = 0
+        for item in self.choice_button_ref :
+            item['fg'] = self.button_colours_list[count][2]
+            item['bg'] = self.button_colours_list[count][0]
+            item['text'] = self.button_colours_list[count][0]
+            item['state'] = "normal"
+
+            count += 1
+
+        # retrieve number of rounds wanted / played
+        # and update heading.
+        how_many = self.rounds_wanted.get()
+        current_round = self.rounds_played.get()
+        new_heading = "Choose - Round {} of " \
+                      "{}".format(current_round + 1, how_many)
+        self.choose_heading.config(text=new_heading)
+
+        # work out who won and if the game is over
+    # update win / loss labels and buttons
     def to_compare(self, user_score):
-        print("Your score is", user_score)
+
+        how_many = self.rounds_wanted.get()
+
+        # add one to number of rounds played
+        current_round = self.rounds_played.get()
+        current_round += 1
+        self.rounds_played.set(current_round)
+
+        # deactivate colour buttons
+        for item in self.control_button_ref:
+            item.config(state=DISABLED)
+
+        # set up background colours
+        win_colour = "#D5E8D4"
+        lose_colour = "#F8CECC"
+
+        # retrieve user score, make it into and integer
+        # and add to list for stats
+        user_score_current = int(user_choice[1])
+        self.user_scores.append(user_score_current)
+
+        # remove user choice from button colours list
+        to_remove = self.button_colours_list.index(user_choice)
+        self.button_colours_list.pop(to_remove)
+
+        # get computer choice and add to list for stats
+        # when getting score, change it to an integer before
+        # appending
+        comp_choice = random.choice(self.button_colours_list)
+        comp_score_current = int(comp_choice[1])
+
+        self.computer_scores.append(comp_score_current)
+
+        comp_announce = "The computer " \
+                        "chose {}".format(comp_choice[0])
+
+        self.comp_choice_label.config(text=comp_announce,
+                                      bg=comp_choice[0],
+                                      fg=comp_choice[2])
 
     # detects which control button was pressed and
     # invokes necessary function. Can possibly replace functions
