@@ -256,6 +256,58 @@ class Play:
                                       bg=comp_choice[0],
                                       fg=comp_choice[2])
 
+        # get colours and show results
+        if user_score_current > comp_score_current:
+            round_results_bg = win_colour
+        else:
+            round_results_bg = lose_colour
+
+        rounds_outcome_txt = "Round {}: User {} \t" \
+                             "Computer: {}".format(current_round,
+                                                   user_score_current,
+                                                   comp_score_current)
+        self.round_results_label.config(bg=round_results_bg,
+                                        text=rounds_outcome_txt)
+
+        # get total scores for user and computer...
+        user_total = sum(self.user_scores)
+        comp_total = sum(self.computer_scores)
+
+        if user_total > comp_total:
+            self.game_results_label.config(bg=win_colour)
+            status = "You Win!"
+        else:
+            self.game_results_label.config(bg=lose_colour)
+            status = "You Lose!"
+
+        game_outcome_txt = "Total score: User {} \t" \
+                           "Computer: {}".format(user_total,
+                                                 comp_total)
+        self.game_results_label.config(text=game_outcome_txt)
+
+        if current_round == how_many:
+            # change 'next' button to show overall
+            # win / loss result and disable it
+            self.next_button.config(state=DISABLED,
+                                    text=status)
+
+            # update 'start over' button
+            start_over_button = self.control_button_ref[2]
+            start_over_button['text'] = "Play Again"
+            start_over_button['bg'] = "#009900"
+
+            # change all colour button background to light grey
+            for item in self.choice_button_ref:
+                item['bg'] = "#C0C0C0"
+
+        else:
+            # enable next round button and update heading
+            self.next_button.config(state="normal")
+
+        # if the game is over, disable all buttons
+        # and change the text of the 'next' button to either
+        # 'You win!' or 'You lose!' and disable all buttons.
+
     # detects which control button was pressed and
     # invokes necessary function. Can possibly replace functions
     # with calls to classes in this section
