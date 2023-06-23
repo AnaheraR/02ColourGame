@@ -148,7 +148,7 @@ class Play:
         self.next_button = Button(self.rounds_frame, text="Next Round",
                                   fg="#FFFFFF", bg="#008BFC",
                                   font=("Arial", 11, "bold"),
-                                  width=10, state=DISABLED)
+                                  width=10, state=DISABLED, command=self.new_round)
         self.next_button.grid(row=0, column=1)
 
         # at start, get 'new round'
@@ -239,7 +239,7 @@ class Play:
 
         # set button bg, fg and text
         count = 0
-        for item in self.choice_button_ref :
+        for item in self.choice_button_ref:
             item['fg'] = self.button_colours_list[count][2]
             item['bg'] = self.button_colours_list[count][0]
             item['text'] = self.button_colours_list[count][0]
